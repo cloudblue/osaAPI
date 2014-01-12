@@ -1,6 +1,13 @@
 paAPI
 ========
 
+.. image:: https://pypip.in/v/paAPI/badge.png
+        :target: https://crate.io/packages/paAPI
+
+.. image:: https://pypip.in/d/paAPI/badge.png
+        :target: https://crate.io/packages/paAPI
+        
+
 A python client for the Parallels Operations Automation (POA) and Parallels Business Automation Enterprise (PBA) APIs.
 
 .. contents::
