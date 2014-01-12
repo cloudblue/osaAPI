@@ -1,4 +1,4 @@
-PythonPA
+paAPI
 ========
 
 A python client for the Parallels Operations Automation (POA) and Parallels Business Automation Enterprise (PBA) APIs.
@@ -13,7 +13,7 @@ Installation
 
 Using pip::
 
-    $ pip install PythonPA
+    $ pip install paAPI
     
 
 =============================
@@ -32,7 +32,7 @@ Default Connection
 
 .. code:: python
 
-    from PythonPA import POA, PBA
+    from paAPI import POA, PBA
 
     # connect to POA
     pem = POA('mn.hostname.com')
@@ -45,7 +45,7 @@ Basic HTTP Authentication
 
 .. code:: python
 
-    from PythonPA import POA, PBA
+    from paAPI import POA, PBA
     
     # connect to POA 
     pem = POA('mn.hostname.com', user='admin', password='setup')
@@ -56,7 +56,7 @@ SSL
 
 .. code:: python
 
-    from PythonPA import POA, PBA
+    from paAPI import POA, PBA
     
     # connect to POA 
     pem = POA('mn.hostname.com', ssl=True)
@@ -66,7 +66,7 @@ Custom Port
 
 .. code:: python
 
-    from PythonPA import POA, PBA
+    from paAPI import POA, PBA
     
     # connect to POA 
     pem = POA('mn.hostname.com', port=8888)
@@ -90,7 +90,7 @@ This example will show the pem.getAccountInfo_ method being called.
 
 .. code:: python
 
-    from PythonPA import POA
+    from paAPI import POA
 
     pem = POA('mn.hostname.com', port=8888)
     
@@ -105,7 +105,7 @@ This example will show the pem.getAccountInfo_ method being called.
 API Call with 'array of struct'
 -------------------------------
 
-The POA API often calls for values and settings to be sent as an 'array of struct'. This example shows how to send these values using the PythonPA client.
+The POA API often calls for values and settings to be sent as an 'array of struct'. This example shows how to send these values using the paAPI client.
 
 This example is based on the pem.activateSubscription_ method with resources types called 'DiskSpace' and 'Bandwidth' and a domain name.
 
@@ -113,7 +113,7 @@ This example is based on the pem.activateSubscription_ method with resources typ
 
 .. code:: python
 
-    from PythonPA import POA
+    from paAPI import POA
 
     pem = POA('mn.hostname.com', port=8888)
     
@@ -150,11 +150,11 @@ This example is based on the pem.activateSubscription_ method with resources typ
 Transactions
 ------------
 
-There are three POA API calls that do not start with pem in the official documentation. When using PythonPA you can use these API calls as documented but you will still need to preface them with your POA connection object (the examples on this page use 'pem' as the connection object name).
+There are three POA API calls that do not start with pem in the official documentation. When using paAPI you can use these API calls as documented but you will still need to preface them with your POA connection object (the examples on this page use 'pem' as the connection object name).
     
 .. code:: python
 
-    from PythonPA import POA
+    from paAPI import POA
 
     pem = POA('mn.hostname.com', port=8888)
     
@@ -191,7 +191,7 @@ The POA API has quite good responces when an error occurs during an API call. Th
 Parallels Business Automation (PBA) API
 ==================================================
 
-The PBA API is quite different from the POA API, and not quite as user friendly. The PythonPA client makes using the PBA a little easier by standardizing the returned responces, providing status codes, and decoding any error messages.
+The PBA API is quite different from the POA API, and not quite as user friendly. The paAPI client makes using the PBA a little easier by standardizing the returned responces, providing status codes, and decoding any error messages.
 
 The major difference between the POA and PBA api is how values are sent and received. In PBA params are sent and responces are received as a list in a specific order to know what each value represents.
 
@@ -206,7 +206,7 @@ This example will show the **AccountDetailsGet_API** method being called.
 
 .. code:: python
 
-    from PythonPA import PBA
+    from paAPI import PBA
     
     api = PBA('pba.hostname.com')
     
@@ -221,7 +221,7 @@ Most PBA API method calls use the "BM" server. Some methods use alternate server
 
 .. code:: python
 
-    from PythonPA import PBA
+    from paAPI import PBA
     
     api = PBA('pba.hostname.com')
     
@@ -230,7 +230,7 @@ Most PBA API method calls use the "BM" server. Some methods use alternate server
 Error Handling
 --------------
 
-PythonPA takes the way POA returns errors natively and applies it to the PBA API. The status on each responce will either be **0** for a succesfull call, or **-1** if PBA returned an error.
+paAPI takes the way POA returns errors natively and applies it to the PBA API. The status on each responce will either be **0** for a succesfull call, or **-1** if PBA returned an error.
 
 This is an example of what is returned in the case of an error:
 
