@@ -168,11 +168,32 @@ There are three POA API calls that do not start with pem in the official documen
     pem.txn.Rollback()
    
    
+Error Handling
+--------------
+
+The POA API has quite good responces when an error occurs during an API call. The below example shows the responce format for POA API errors:
+
+
+.. code:: python
+
+    {
+        'status'         : -1, 
+        'extype_id'      : 21, 
+        'module_id'      : 'OpenAPI', 
+        'error_message'  : 'Invalid set of arguments. There should be specified EITHER external_info OR person, address, phone, [fax], [locale], email.', 
+        'properties'     : { 
+                               'reason': 'Invalid set of arguments. There should be specified EITHER external_info OR person, address, phone, [fax], [locale], email.'
+                           }
+    }
+
+   
 ==================================================
-Parallels Business Automation Enterprise (PBA) API
+Parallels Business Automation (PBA) API
 ==================================================
 
 The PBA API is quite different from the POA API, and not quite as user friendly. The PythonPA client makes using the PBA a little easier by standardizing the returned responces, providing status codes, and decoding any error messages.
+
+The major difference between the POA and PBA api is how values are sent and received. In PBA params are sent and responces are received as a list in a specific order to know what each value represents.
 
 The full PBA Public API Reference can be found here:
 
@@ -193,5 +214,37 @@ This example will show the **AccountDetailsGet_API** method being called.
     
     # {'status': 0, 'result': [1002242, 1002241, 'Test Account  5543', '1 Test Street', '', 'Canberra', '', '2621', 'au', '', 'John', 'D', 'Smith', 'noreply@example.com', '61', '04', '000000000', '', '', '', '', '', 1351787114, 2, 0]}
     
+Alternate Server
+----------------
+
+Most PBA API method calls use the "BM" server. Some methods use alternate servers such as "PEMGATE" or "DOMAINGATE". This example shows how to specify an alternate server:
+
+.. code:: python
+
+    from PythonPA import PBA
+    
+    api = PBA('pba.hostname.com')
+    
+    api.Execute('DomainExpirationDateGet_API', params=params, server='DOMAINGATE')
+    
+Error Handling
+--------------
+
+PythonPA takes the way POA returns errors natively and applies it to the PBA API. The status on each responce will either be **0** for a succesfull call, or **-1** if PBA returned an error.
+
+This is an example of what is returned in the case of an error:
+
+.. code:: python
+
+    {
+        'status'        : -1, 
+        'error_message' : 'Table Account does not contain row with ID 99999999.', 
+        'server'        : 'BM', 
+        'host'          : 'pba.hostname.com', 
+        'params'        : ['99999999'], 
+        'result'        : None, 
+        'method'        : 'AccountDetailsGet_API'
+    }
+
     
 
