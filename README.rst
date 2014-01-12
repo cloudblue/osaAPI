@@ -157,7 +157,7 @@ This example is based on the pem.activateSubscription_ method with resources typ
 Transactions
 ------------
 
-There are three POA API calls that do not start with pem in the official documentation. When using paAPI you can use these API calls as documented but you will still need to preface them with your POA connection object (the examples on this page use 'pem' as the connection object name).
+There are three POA API calls that do not start with pem in the official documentation. When using paAPI you can use these API calls as documented but you will still need to prefix them with your POA connection object (the examples on this page use 'pem' as the connection object name).
     
 .. code:: python
 
