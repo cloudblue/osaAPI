@@ -99,7 +99,7 @@ This example will show the pem.getAccountInfo_ method being called.
 
     from paAPI import POA
 
-    pem = POA('mn.hostname.com', port=8888)
+    pem = POA('mn.hostname.com')
     
     d = {
         'account_id' : 1002242
@@ -122,7 +122,7 @@ This example is based on the pem.activateSubscription_ method with resources typ
 
     from paAPI import POA
 
-    pem = POA('mn.hostname.com', port=8888)
+    pem = POA('mn.hostname.com')
     
     # define the resource limits:
     DiskSpace = {
@@ -163,7 +163,7 @@ There are three POA API calls that do not start with pem in the official documen
 
     from paAPI import POA
 
-    pem = POA('mn.hostname.com', port=8888)
+    pem = POA('mn.hostname.com')
     
     # being transaction
     pem.txn.Begin()
