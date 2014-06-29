@@ -52,6 +52,16 @@ class POA(object):
             self.__server__ = xmlrpclib.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
         self.__server__._ServerProxy__verbose = verbose
 
+    # PPA only
+    @property
+    class msp_license_manager(object):
+        def __init__(self, conn):
+            self.__server__ = conn.__server__
+            self.__server__._ServerProxy__verbose = conn.__server__._ServerProxy__verbose
+
+        def uploadMainLicense(self, **kwargs):
+            return self.__server__.pem.msp_license_manager.uploadMainLicense(kwargs)
+
     @property
     def APS(self):
         return self.aps
