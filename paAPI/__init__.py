@@ -1,45 +1,55 @@
-import xmlrpclib, base64
+import xmlrpclib
+import base64
+
 
 class PBA(object):
-    def __init__(self,host,user=None,password=None,ssl=False,verbose=False,port=5224):
-        if ssl == False: protocol = 'http'
-        elif ssl == True: protocol = 'https'
-        if user != None: self.__server__ = xmlrpclib.ServerProxy("%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
-        elif user == None: self.__server__ = xmlrpclib.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
+    def __init__(self, host, user=None, password=None, ssl=False, verbose=False, port=5224):
+        if ssl == False:
+            protocol = 'http'
+        elif ssl == True:
+            protocol = 'https'
+        if user != None:
+            self.__server__ = xmlrpclib.ServerProxy("%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
+        elif user == None:
+            self.__server__ = xmlrpclib.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
         self.__server__._ServerProxy__verbose = verbose
         self.host = host
 
     def Execute(self, method, params=[], server='BM'):
         vars = {
-            'Params' : params,
-            'Server' : server,
-            'Method' : method,
+            'Params': params,
+            'Server': server,
+            'Method': method,
         }
         try:
             responce = {
-                'status' : 0,
-                'result' : self.__server__.Execute(vars)['Result'].pop(),
+                'status': 0,
+                'result': self.__server__.Execute(vars)['Result'].pop(),
             }
             return responce
         except xmlrpclib.Fault as err:
             responce = {
-                'error_message' : base64.b64decode(err.faultString).strip(),
-                'status' : -1,
-                'method' : method,
-                'params' : params,
-                'server' : server,
-                'host' : self.host,
-                'result' : None,
+                'error_message': base64.b64decode(err.faultString).strip(),
+                'status': -1,
+                'method': method,
+                'params': params,
+                'server': server,
+                'host': self.host,
+                'result': None,
             }
             return responce
 
-class POA(object):
 
-    def __init__(self,host,user=None,password=None,ssl=False,verbose=False,port=8440):
-        if ssl == False: protocol = 'http'
-        elif ssl == True: protocol = 'https'
-        if user != None: self.__server__ = xmlrpclib.ServerProxy("%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
-        elif user == None: self.__server__ = xmlrpclib.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
+class POA(object):
+    def __init__(self, host, user=None, password=None, ssl=False, verbose=False, port=8440):
+        if ssl == False:
+            protocol = 'http'
+        elif ssl == True:
+            protocol = 'https'
+        if user != None:
+            self.__server__ = xmlrpclib.ServerProxy("%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
+        elif user == None:
+            self.__server__ = xmlrpclib.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
         self.__server__._ServerProxy__verbose = verbose
 
     @property
@@ -81,7 +91,7 @@ class POA(object):
     @property
     def ad(self):
         return self.AD
-    
+
     @property
     def mscrm(self):
         return self.MSCRM
@@ -193,7 +203,6 @@ class POA(object):
         return self.__server__.pem.revokeRolesFromMember(kwargs)
 
 
-
     """
     Subscriptions Management 
     """
@@ -232,11 +241,10 @@ class POA(object):
         return self.__server__.pem.getCustomerSubscriptions(kwargs)
 
 
-
     """
     Domains Management
     """
- 
+
     def addDNSHosting(self, **kwargs):
         return self.__server__.pem.addDNSHosting(kwargs)
 
@@ -323,7 +331,6 @@ class POA(object):
 
     def unbindServicesFromDomain(self, **kwargs):
         return self.__server__.pem.unbindServicesFromDomain(kwargs)
-
 
 
     """
@@ -479,7 +486,7 @@ class POA(object):
 
         def revokeFTPAccessFromWebsite(self, **kwargs):
             return self.__server__.pem.iis.revokeFTPAccessFromWebsite(kwargs)
-    
+
 
     @property
     class OCS(object):
@@ -489,8 +496,6 @@ class POA(object):
 
         def getPhoneNumberList(self, **kwargs):
             return self.__server__.pem.ocs.getPhoneNumberList(kwargs)
-
-
 
 
     """
@@ -551,12 +556,11 @@ class POA(object):
         return self.__server__.pem.removeUser(kwargs)
 
 
-
     """
     Hosted CRM Management
     """
 
-   
+
     @property
     class MSCRM(object):
         def __init__(self, conn):
@@ -659,11 +663,10 @@ class POA(object):
             return self.__server__.pem.mysql.applyMySQLActivationParams(kwargs)
 
 
-
     """
     QMail Mailbox Management
     """
-    
+
     @property
     class CQMAIL(object):
         def __init__(self, conn):
@@ -699,7 +702,6 @@ class POA(object):
 
         def getItems(self, **kwargs):
             return self.__server__.pem.spam_assassin.getItems(kwargs)
-
 
 
     """
@@ -752,8 +754,6 @@ class POA(object):
         return self.__server__.pem.uploadLicense(kwargs)
 
 
-
-
     """
     Service Template Management
     """
@@ -783,7 +783,6 @@ class POA(object):
         return self.__server__.pem.setSTRTLimits(kwargs)
 
 
-
     """
     Provisioning Attributes Management
     """
@@ -802,7 +801,6 @@ class POA(object):
 
     def unsetHostAttributes(self, **kwargs):
         return self.__server__.pem.unsetHostAttributes(kwargs)
-
 
 
     """
@@ -831,7 +829,6 @@ class POA(object):
         return self.__server__.pem.unbindIPPool(kwargs)
 
 
-
     """
     Native Package Management
     """
@@ -845,7 +842,7 @@ class POA(object):
         @property
         def native_repository(self):
             return self.NATIVE_REPOSITORY
-        
+
         @property
         class NATIVE_REPOSITORY(object):
             def __init__(self, conn):
@@ -863,7 +860,6 @@ class POA(object):
 
             def removeRepository(self, **kwargs):
                 return self.__server__.pem.packaging.native_repository.removeRepository(kwargs)
-
 
 
     """
@@ -886,7 +882,6 @@ class POA(object):
         return self.__server__.pem.unbrandDomain(kwargs)
 
 
-
     """
     Hardware Node Management
     """
@@ -904,7 +899,6 @@ class POA(object):
         return self.__server__.pem.registerWindowsNode(kwargs)
 
 
-
     """
     Parallels Plesk Panel Management
     """
@@ -916,7 +910,6 @@ class POA(object):
         return self.__server__.pem.revokePleskLicense(kwargs)
 
 
-    
     """
     Parallels Virtuozzo Containers Management
     """
@@ -947,7 +940,6 @@ class POA(object):
 
         def registerHWNode(self, **kwargs):
             return self.__server__.pem.virtuozzo.registerHWNode(kwargs)
-
 
 
     """
@@ -1094,7 +1086,7 @@ class POA(object):
 
         def changeMailboxTemplate(self, **kwargs):
             return self.__server__.pem.exchange.changeMailboxTemplate(kwargs)
- 
+
         def getMailboxTemplates(self, **kwargs):
             return self.__server__.pem.exchange.getMailboxTemplates(kwargs)
 
@@ -1205,7 +1197,7 @@ class POA(object):
 
         def grantDeliveryPermissions(self, **kwargs):
             return self.__server__.pem.exchange.grantDeliveryPermissions(kwargs)
- 
+
         def revokeDeliveryPermissions(self, **kwargs):
             return self.__server__.pem.exchange.revokeDeliveryPermissions(kwargs)
 
@@ -1241,7 +1233,6 @@ class POA(object):
 
         def removeEmailAddresses(self, **kwargs):
             return self.__server__.pem.exchange.removeEmailAddresses(kwargs)
-
 
 
     """
@@ -1365,7 +1356,6 @@ class POA(object):
         return self.__server__.pem.unregisterExternalSystem(kwargs)
 
 
-
     """
     Transactional Extension
     """
@@ -1382,7 +1372,7 @@ class POA(object):
         def __init__(self, conn):
             self.__server__ = conn.__server__
             self.__server__._ServerProxy__verbose = conn.__server__._ServerProxy__verbose
-    
+
         def Begin(self, **kwargs):
             return self.__server__.txn.Begin(kwargs)
 
