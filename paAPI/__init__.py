@@ -5,7 +5,6 @@ import random
 
 
 def rand_id(max_size=10, chars=string.ascii_uppercase + string.digits):
-    assert max_size >= 1
     size = random.randint(min(max_size, 5), max_size)
     return ''.join(random.choice(chars) for x in range(size))
 
