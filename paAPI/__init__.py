@@ -1441,17 +1441,12 @@ class POA(object):
         phone = {'country_code': rand_id(3, string.digits), 'area_code': rand_id(
             4, string.digits), 'phone_num': rand_id(10, string.digits), 'ext_num': ''}
 
-        if 'email' in kwargs:
-            email = kwargs['email']
-        else:
-            email = '%s@%s.com' % (rand_id(10), rand_id(8))
-
         data = {
             'account_type': account_type,
             'person': person,
-            'address': address,
-            'phone': phone,
-            'email': email
+            'address': kwargs.get('address', address),
+            'phone': kwargs.get('phone', phone),
+            'email': kwargs.get('email', '%s@%s.com' % (rand_id(10), rand_id(8)))
         }
 
         if branded_domain:
@@ -1463,34 +1458,35 @@ class POA(object):
         return self.addAccount(**data)
 
     def create_account_member(self, account_id, login, password='password', **kwargs):
-        if 'first_name' in kwargs:
-            first_name = kwargs['first_name']
-        else:
-            first_name = rand_id(10)
-
-        if 'last_name' in kwargs:
-            last_name = kwargs['last_name']
-        else:
-            last_name = rand_id(10)
-
-        if 'email' in kwargs:
-            email = kwargs['email']
-        else:
-            email = '%s@%s.com' % (rand_id(10), rand_id(8))
+        first_name = kwargs.get('first_name', rand_id(10))
+        last_name = kwargs.get('last_name', rand_id(10))
+        email = kwargs.get('email', '%s@%s.com' % (rand_id(10), rand_id(8)))
 
         # Forcing difference between user_id and member_id as happened in #APS-19910
         # Note: if we ever face an error like "user_id already exists - need to add retry here
         _user_id = random.randint(2 ** 20, 2 ** 31 - 1)
+
+        address = {
+            'street_name': rand_id(10),
+            'zipcode': rand_id(10, string.digits),
+            'city': rand_id(10),
+            'country': 'ru',
+            'state': rand_id(10)
+        }
+        phone = {
+            'country_code': rand_id(3, string.digits),
+            'area_code': rand_id(4, string.digits),
+            'phone_num': rand_id(10, string.digits),
+            'ext_num': ''
+        }
 
         member = self.addAccountMember(
             account_id=account_id,
             user_id=_user_id,
             auth={'login': login, 'password': password},
             person={'first_name': first_name, 'last_name': last_name},
-            address={'street_name': rand_id(10), 'zipcode': rand_id(
-                10, string.digits), 'city': rand_id(10), 'country': 'ru', 'state': rand_id(10)},
-            phone={'country_code': rand_id(3, string.digits), 'area_code': rand_id(
-                4, string.digits), 'phone_num': rand_id(10, string.digits), 'ext_num': ''},
+            address=kwargs.get('address', address),
+            phone=kwargs.get('phone', phone),
             email=email
         )
 
