@@ -1,5 +1,12 @@
 import xmlrpclib
 import base64
+import string
+import random
+
+
+def rand_id(max_size=10, chars=string.ascii_uppercase + string.digits):
+    size = random.randint(min(max_size, 5), max_size)
+    return ''.join(random.choice(chars) for x in range(size))
 
 
 class PBA(object):
@@ -1401,3 +1408,95 @@ class POA(object):
 
         def rescheduleTask(self, **kwargs):
             return self.__server__.pem.tasks.rescheduleTask(kwargs)
+
+    def create_account(self, first_name=None, last_name=None, account_type='C',
+                     branded_domain=None, parent_account_id=None, **kwargs):
+        """
+        Possible values for the account_type:
+            'C': Indicates that the Account is created for Customer. Default value.
+            'R': Indicates that the Account is created for Reseller.
+        If company param is present in call, this one is bypassed to openapi call, this one
+        is optional parameter in call and causes different behaivour on how account is called
+        (personal vs business)
+        If first_name, last_name are different than none, autogeneration is user_id
+        if email param is present in input, is used, otherwise is random generated
+        """
+        if not first_name:
+            first_name = rand_id(10)
+
+        if not last_name:
+            last_name = rand_id(10)
+
+        if 'company' in kwargs:
+            company_name = kwargs['company']
+            person = {
+                'first_name': first_name,
+                'last_name': last_name,
+                'company_name': company_name}
+        else:
+            person = {'first_name': first_name, 'last_name': last_name}
+
+        address = {'street_name': rand_id(10), 'zipcode': rand_id(
+            10, string.digits), 'city': rand_id(10), 'country': 'ru', 'state': rand_id(10)}
+        phone = {'country_code': rand_id(3, string.digits), 'area_code': rand_id(
+            4, string.digits), 'phone_num': rand_id(10, string.digits), 'ext_num': ''}
+
+        data = {
+            'account_type': account_type,
+            'person': person,
+            'address': kwargs.get('address', address),
+            'phone': kwargs.get('phone', phone),
+            'email': kwargs.get('email', '%s@%s.com' % (rand_id(10), rand_id(8)))
+        }
+
+        if branded_domain:
+            data['branded_domain'] = branded_domain
+
+        if parent_account_id:
+            data['parent_account_id'] = parent_account_id
+
+        return self.addAccount(**data)
+
+    def create_account_member(self, account_id, login, password='password', **kwargs):
+        first_name = kwargs.get('first_name', rand_id(10))
+        last_name = kwargs.get('last_name', rand_id(10))
+        email = kwargs.get('email', '%s@%s.com' % (rand_id(10), rand_id(8)))
+
+        # Forcing difference between user_id and member_id as happened in #APS-19910
+        # Note: if we ever face an error like "user_id already exists - need to add retry here
+        _user_id = random.randint(2 ** 20, 2 ** 31 - 1)
+
+        address = {
+            'street_name': rand_id(10),
+            'zipcode': rand_id(10, string.digits),
+            'city': rand_id(10),
+            'country': 'ru',
+            'state': rand_id(10)
+        }
+        phone = {
+            'country_code': rand_id(3, string.digits),
+            'area_code': rand_id(4, string.digits),
+            'phone_num': rand_id(10, string.digits),
+            'ext_num': ''
+        }
+
+        member = self.addAccountMember(
+            account_id=account_id,
+            user_id=_user_id,
+            auth={'login': login, 'password': password},
+            person={'first_name': first_name, 'last_name': last_name},
+            address=kwargs.get('address', address),
+            phone=kwargs.get('phone', phone),
+            email=email
+        )
+
+        # !ATTENTION!
+        # user_id returned from the pem.addAccountMember call is not actualy user_id, but member_id
+        # and needs to be translated to the real user_id via pem.getMemberFullInfo call
+        # !ATTENTION!
+
+        # If you need to convert member_id to user_id, you need to use the following code
+        # member_info = self.pem.getMemberFullInfo( member_id = member['user_id'] )
+        # user_id = member_info['user_id']
+
+        return member
