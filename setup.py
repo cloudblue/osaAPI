@@ -11,6 +11,7 @@ def version():
 
 setup(
     name='paAPI',
+    version_getter=version,
     author='oznu',
     author_email='dev@oz.nu',
     packages=['paAPI'],
