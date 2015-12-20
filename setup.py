@@ -18,7 +18,7 @@ setup(
     url='https://github.com/oznu/paAPI',
     license='Apache License',
     description='A python client for the Parallels Operations (POA) and Business Automation (PBA-E) APIs.',
-    long_description=open('README.rst').read(),
+    long_description=open('README.md').read(),
     setup_requires=['odintools'],
     odintools=True,
 )
