@@ -213,6 +213,12 @@ class POA(object):
     def getAccountMemberRoles(self, **kwargs):
         return self.__server__.pem.getAccountMemberRoles(kwargs)
 
+    def getUserFullInfo(self, **kwargs):
+        return self.__server__.pem.getUserFullInfo(kwargs)
+
+    def getMemberFullInfo(self, **kwargs):
+        return self.__server__.pem.getMemberFullInfo(kwargs)
+
     def assignRolesToMember(self, **kwargs):
         return self.__server__.pem.assignRolesToMember(kwargs)
 
