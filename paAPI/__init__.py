@@ -1,4 +1,4 @@
-import xmlrpclib
+from xmlrpc import client
 import base64
 import string
 import random
@@ -16,9 +16,9 @@ class PBA(object):
         elif ssl == True:
             protocol = 'https'
         if user != None:
-            self.__server__ = xmlrpclib.ServerProxy("%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
+            self.__server__ = client.ServerProxy("%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
         elif user == None:
-            self.__server__ = xmlrpclib.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
+            self.__server__ = client.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
         self.__server__._ServerProxy__verbose = verbose
         self.host = host
 
@@ -34,7 +34,7 @@ class PBA(object):
                 'result': self.__server__.Execute(vars)['Result'].pop(),
             }
             return responce
-        except xmlrpclib.Fault as err:
+        except client.Fault as err:
             responce = {
                 'error_message': base64.b64decode(err.faultString).strip(),
                 'status': -1,
@@ -54,9 +54,9 @@ class POA(object):
         elif ssl == True:
             protocol = 'https'
         if user != None:
-            self.__server__ = xmlrpclib.ServerProxy("%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
+            self.__server__ = client.ServerProxy("%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
         elif user == None:
-            self.__server__ = xmlrpclib.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
+            self.__server__ = client.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
         self.__server__._ServerProxy__verbose = verbose
 
     # PPA only
