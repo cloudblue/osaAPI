@@ -1,4 +1,10 @@
-from xmlrpc import client
+import sys
+
+if sys.version_info[0] == 2:
+    import xmlrpclib as client
+else:
+    from xmlrpc import client
+
 import base64
 import string
 import random
