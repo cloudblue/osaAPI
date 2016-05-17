@@ -80,6 +80,10 @@ class POA(object):
         return self.aps
 
     @property
+    def am(self):
+        return self.AM
+
+    @property
     def exchange(self):
         return self.EXCHANGE
 
@@ -1039,6 +1043,15 @@ class POA(object):
         def modifySharePointSiteLimits(self, **kwargs):
             return self.__server__.pem.sharepoint.modifySharePointSiteLimits(kwargs)
 
+    @property
+    class AM(object):
+
+        def __init__(self, conn):
+            self.__server__ = conn.__server__
+            self.__server__._ServerProxy__verbose = conn.__server__._ServerProxy__verbose
+
+        def setAccountCCPVersion(self, **kwargs):
+            return self.__server__.am.setAccountCCPVersion(kwargs)
 
     """
     Exchange Management
