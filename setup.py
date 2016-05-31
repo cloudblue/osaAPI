@@ -7,7 +7,7 @@ PACKAGE_VERSION = '0.3'
 
 def version():
     def version_file(mode='r'):
-        return open(os.path.join(__path__, 'version.txt'), mode)
+        return open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'version.txt'), mode)
 
     if os.getenv('TRAVIS'):
         with version_file('w') as verfile:
@@ -19,7 +19,7 @@ def version():
 
 setup(
     name='osaapi',
-    version_getter=version,
+    version=version(),
     author='apsliteteam, oznu',
     author_email='aps@odin.com',
     packages=['osaapi'],
