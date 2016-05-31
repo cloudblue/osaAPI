@@ -6,9 +6,15 @@ PACKAGE_VERSION = '0.3'
 
 
 def version():
-    import odintools
-    b = os.getenv('TRAVIS_BUILD_NUMBER') if os.getenv('TRAVIS') else os.environ.get('BUILD_NUMBER')
-    return odintools.version(PACKAGE_VERSION, b)
+    def version_file(mode='r'):
+        return open(os.path.join(__path__, 'version.txt'), mode)
+
+    if os.getenv('TRAVIS'):
+        with version_file('w') as verfile:
+            verfile.write('{0}.{1}'.format(PACKAGE_VERSION, os.getenv('TRAVIS_BUILD_NUMBER')))
+    with version_file() as verfile:
+        data = verfile.readlines()
+        return data[0].strip()
 
 
 setup(
@@ -21,6 +27,4 @@ setup(
     license='Apache License',
     description='A python client for the Odin Service Automation (OSA) and billing APIs.',
     long_description=open('README.md').read(),
-    setup_requires=['odintools'],
-    odintools=True,
 )
