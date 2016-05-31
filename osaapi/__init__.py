@@ -3,7 +3,7 @@ import random
 import string
 import sys
 
-if sys.version_info[0] < 2:
+if sys.version_info[0] < 3:
     import xmlrpclib as client
 else:
     from xmlrpc import client
@@ -16,14 +16,11 @@ def rand_id(max_size=10, chars=string.ascii_uppercase + string.digits):
 
 class PBA(object):
     def __init__(self, host, user=None, password=None, ssl=False, verbose=False, port=5224):
-        if ssl is False:
-            protocol = 'http'
-        elif ssl is True:
-            protocol = 'https'
-        if user is not None:
+        protocol = 'https' if ssl else 'http'
+        if user:
             self.__server__ = client.ServerProxy(
                 "%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
-        elif user is None:
+        else:
             self.__server__ = client.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
         self.__server__._ServerProxy__verbose = verbose
         self.host = host
@@ -57,14 +54,11 @@ class PBA(object):
 
 class OSA(object):
     def __init__(self, host, user=None, password=None, ssl=False, verbose=False, port=8440):
-        if ssl is False:
-            protocol = 'http'
-        elif ssl is True:
-            protocol = 'https'
-        if user is not None:
+        protocol = 'https' if ssl else 'http'
+        if user:
             self.__server__ = client.ServerProxy(
                 "%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
-        elif user is None:
+        else:
             self.__server__ = client.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
         self.__server__._ServerProxy__verbose = verbose
 
