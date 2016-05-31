@@ -8,6 +8,7 @@ PACKAGE_VERSION = '0.3'
 def version():
     def version_file(mode='r'):
         return open(os.path.join(__path__, 'version.txt'), mode)
+
     if os.getenv('TRAVIS'):
         with version_file('w') as verfile:
             verfile.write('{0}.{1}'.format(PACKAGE_VERSION, os.getenv('TRAVIS_BUILD_NUMBER')))
