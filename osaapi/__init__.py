@@ -1,13 +1,12 @@
+import base64
+import random
+import string
 import sys
 
-if sys.version_info[0] == 2:
+if sys.version_info[0] < 2:
     import xmlrpclib as client
 else:
     from xmlrpc import client
-
-import base64
-import string
-import random
 
 
 def rand_id(max_size=10, chars=string.ascii_uppercase + string.digits):
@@ -17,31 +16,34 @@ def rand_id(max_size=10, chars=string.ascii_uppercase + string.digits):
 
 class PBA(object):
     def __init__(self, host, user=None, password=None, ssl=False, verbose=False, port=5224):
-        if ssl == False:
+        if ssl is False:
             protocol = 'http'
-        elif ssl == True:
+        elif ssl is True:
             protocol = 'https'
-        if user != None:
-            self.__server__ = client.ServerProxy("%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
-        elif user == None:
+        if user is not None:
+            self.__server__ = client.ServerProxy(
+                "%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
+        elif user is None:
             self.__server__ = client.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
         self.__server__._ServerProxy__verbose = verbose
         self.host = host
 
-    def Execute(self, method, params=[], server='BM'):
-        vars = {
+    def Execute(self, method, params=None, server='BM'):
+        if not params:
+            params = []
+        v = {
             'Params': params,
             'Server': server,
             'Method': method,
         }
         try:
-            responce = {
+            response = {
                 'status': 0,
-                'result': self.__server__.Execute(vars)['Result'].pop(),
+                'result': self.__server__.Execute(v)['Result'].pop(),
             }
-            return responce
+            return response
         except client.Fault as err:
-            responce = {
+            response = {
                 'error_message': base64.b64decode(err.faultString).strip(),
                 'status': -1,
                 'method': method,
@@ -50,18 +52,19 @@ class PBA(object):
                 'host': self.host,
                 'result': None,
             }
-            return responce
+            return response
 
 
-class POA(object):
+class OSA(object):
     def __init__(self, host, user=None, password=None, ssl=False, verbose=False, port=8440):
-        if ssl == False:
+        if ssl is False:
             protocol = 'http'
-        elif ssl == True:
+        elif ssl is True:
             protocol = 'https'
-        if user != None:
-            self.__server__ = client.ServerProxy("%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
-        elif user == None:
+        if user is not None:
+            self.__server__ = client.ServerProxy(
+                "%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
+        elif user is None:
             self.__server__ = client.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
         self.__server__._ServerProxy__verbose = verbose
 
@@ -155,9 +158,8 @@ class POA(object):
     def tasks(self):
         return self.TASKS
 
-
     """
-    Management of Accounts and Account's Staff Members    
+    Management of Accounts and Account's Staff Members
     """
 
     def addAccount(self, **kwargs):
@@ -235,9 +237,8 @@ class POA(object):
     def revokeRolesFromMember(self, **kwargs):
         return self.__server__.pem.revokeRolesFromMember(kwargs)
 
-
     """
-    Subscriptions Management 
+    Subscriptions Management
     """
 
     def activateSubscription(self, **kwargs):
@@ -272,7 +273,6 @@ class POA(object):
 
     def getCustomerSubscriptions(self, **kwargs):
         return self.__server__.pem.getCustomerSubscriptions(kwargs)
-
 
     """
     Domains Management
@@ -365,7 +365,6 @@ class POA(object):
     def unbindServicesFromDomain(self, **kwargs):
         return self.__server__.pem.unbindServicesFromDomain(kwargs)
 
-
     """
     Webspace Management
     """
@@ -394,7 +393,6 @@ class POA(object):
         def turnWebStatProcessingOff(self, **kwargs):
             return self.__server__.pem.apache.turnWebStatProcessingOff(kwargs)
 
-
     @property
     class WEB_CLUSTER(object):
         def __init__(self, conn):
@@ -403,7 +401,6 @@ class POA(object):
 
         def changeNFS(self, **kwargs):
             return self.__server__.pem.web_cluster.changeNFS(kwargs)
-
 
     @property
     class PROFTPD(object):
@@ -419,7 +416,6 @@ class POA(object):
 
         def getCustomFTPUsersList(self, **kwargs):
             return self.__server__.pem.ProFTPD.getCustomFTPUsersList(kwargs)
-
 
     @property
     class IIS(object):
@@ -520,7 +516,6 @@ class POA(object):
         def revokeFTPAccessFromWebsite(self, **kwargs):
             return self.__server__.pem.iis.revokeFTPAccessFromWebsite(kwargs)
 
-
     @property
     class OCS(object):
         def __init__(self, conn):
@@ -530,9 +525,8 @@ class POA(object):
         def getPhoneNumberList(self, **kwargs):
             return self.__server__.pem.ocs.getPhoneNumberList(kwargs)
 
-
     """
-    Service User Management 
+    Service User Management
     """
 
     @property
@@ -559,7 +553,6 @@ class POA(object):
 
             def getUserInfo(self, **kwargs):
                 return self.__server__.pem.ad.binding.getUserInfo(kwargs)
-
 
     def addUser(self, **kwargs):
         return self.__server__.pem.addUser(kwargs)
@@ -588,11 +581,9 @@ class POA(object):
     def removeUser(self, **kwargs):
         return self.__server__.pem.removeUser(kwargs)
 
-
     """
     Hosted CRM Management
     """
-
 
     @property
     class MSCRM(object):
@@ -666,7 +657,6 @@ class POA(object):
         def synchronizeData(self, **kwargs):
             return self.__server__.pem.mscrm.synchronizeData(kwargs)
 
-
     """
     Database Management
     """
@@ -694,7 +684,6 @@ class POA(object):
 
         def applyMySQLActivationParams(self, **kwargs):
             return self.__server__.pem.mysql.applyMySQLActivationParams(kwargs)
-
 
     """
     QMail Mailbox Management
@@ -735,7 +724,6 @@ class POA(object):
 
         def getItems(self, **kwargs):
             return self.__server__.pem.spam_assassin.getItems(kwargs)
-
 
     """
     Resource Accounting
@@ -786,7 +774,6 @@ class POA(object):
     def uploadLicense(self, **kwargs):
         return self.__server__.pem.uploadLicense(kwargs)
 
-
     """
     Service Template Management
     """
@@ -815,7 +802,6 @@ class POA(object):
     def setSTRTLimits(self, **kwargs):
         return self.__server__.pem.setSTRTLimits(kwargs)
 
-
     """
     Provisioning Attributes Management
     """
@@ -834,7 +820,6 @@ class POA(object):
 
     def unsetHostAttributes(self, **kwargs):
         return self.__server__.pem.unsetHostAttributes(kwargs)
-
 
     """
     IP Pools Management
@@ -860,7 +845,6 @@ class POA(object):
 
     def unbindIPPool(self, **kwargs):
         return self.__server__.pem.unbindIPPool(kwargs)
-
 
     """
     Native Package Management
@@ -894,7 +878,6 @@ class POA(object):
             def removeRepository(self, **kwargs):
                 return self.__server__.pem.packaging.native_repository.removeRepository(kwargs)
 
-
     """
     Branding Management
     """
@@ -914,7 +897,6 @@ class POA(object):
     def unbrandDomain(self, **kwargs):
         return self.__server__.pem.unbrandDomain(kwargs)
 
-
     """
     Hardware Node Management
     """
@@ -931,7 +913,6 @@ class POA(object):
     def registerWindowsNode(self, **kwargs):
         return self.__server__.pem.registerWindowsNode(kwargs)
 
-
     """
     Parallels Plesk Panel Management
     """
@@ -941,7 +922,6 @@ class POA(object):
 
     def revokePleskLicense(self, **kwargs):
         return self.__server__.pem.revokePleskLicense(kwargs)
-
 
     """
     Parallels Virtuozzo Containers Management
@@ -973,7 +953,6 @@ class POA(object):
 
         def registerHWNode(self, **kwargs):
             return self.__server__.pem.virtuozzo.registerHWNode(kwargs)
-
 
     """
     Global Relay Archiving Management
@@ -1276,7 +1255,6 @@ class POA(object):
         def removeEmailAddresses(self, **kwargs):
             return self.__server__.pem.exchange.removeEmailAddresses(kwargs)
 
-
     """
     Application Management
     """
@@ -1380,9 +1358,8 @@ class POA(object):
         def getUserServiceInstances(self, **kwargs):
             return self.__server__.pem.APS.getUserServiceInstances(kwargs)
 
-
     """
-    External System Management 
+    External System Management
     """
 
     def getExternalSystemList(self, **kwargs):
@@ -1397,7 +1374,6 @@ class POA(object):
     def unregisterExternalSystem(self, **kwargs):
         return self.__server__.pem.unregisterExternalSystem(kwargs)
 
-
     """
     Transactional Extension
     """
@@ -1407,7 +1383,6 @@ class POA(object):
 
     def getRequestStatus(self, **kwargs):
         return self.__server__.pem.getRequestStatus(kwargs)
-
 
     @property
     class TXN(object):
@@ -1424,7 +1399,6 @@ class POA(object):
         def Rollback(self, **kwargs):
             return self.__server__.txn.Rollback(kwargs)
 
-
     @property
     class TASKS(object):
         def __init__(self, conn):
@@ -1435,7 +1409,7 @@ class POA(object):
             return self.__server__.pem.tasks.rescheduleTask(kwargs)
 
     def create_account(self, first_name=None, last_name=None, account_type='C',
-                     branded_domain=None, parent_account_id=None, **kwargs):
+                       branded_domain=None, parent_account_id=None, **kwargs):
         """
         Possible values for the account_type:
             'C': Indicates that the Account is created for Customer. Default value.

@@ -1,0 +1,18 @@
+language: python
+branches:
+  only:
+    - master
+python:
+- '2.7'
+- '3.5'
+install:
+  - pip install -r requirements.txt
+  - pip install -r test-requirements.txt
+script: python setup.py flake8
+deploy:
+  provider: pypi
+  user: apslite
+  password:
+    secure: TjnL/MkQLrwWN6Zq83NFOdmhGjCbcdP+6cYxiFp9SZPkkSnoLikwvKUSENXZ10ixxEihnbMj0ebonxNvi3Quwv+ulo1klga2mbB6GETKfw496kL37oFMj8RxSSvUuuVJDg5s+g7XqVBiLajoRKGwm1xj7pf2Wcz+MKEXKMxY5lzKxKKqi3hViUkE0mYrCop+beIswcAk3ysKo651r6C7w5DM4dIh5dFAV+538kwKEDcPxTG90g+Y9Bo9CzG0AEPh7EFAc+CMtv9uhO+9wLIl1zlQPn71Pks7BNzZZ3uHnHl3QAP/ncofCe3hm45GHMNtUZySqINQsenzETBy7l1moYnwLTVfB5vPtZUrqnBwSqj8bam3BeSL1IXh9r7mxq5EkjfEXf0SbXjUvXwvpBMKDOiktCFjR8/Sw2kHjP/psdqwwda9smHCxZzx8F1JY4KCr8VAJRng/4J4M8LV9qs+HUljKdOSxR9B/XT9DcNo6qR+UBIIg5KrpSOfxS08WHxk+avFbjIAM+2tDcsR1e0ZwVtJ4zg9r6+tl59xbWx2lR4jPCiPXetkyhXDysOxLdOgGA+qxkm96GUc8345p9bcZKyDcrRaFrSSymHHDADzmBEwcVXz9O9OplBWfUjhlUs0JoFrvjBUOaAXb9xdxwRsyb7KHQo1h6mp9lKz19BX2e0=
+  on:
+    distributions: sdist bdist_wheel
