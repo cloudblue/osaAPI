@@ -6,12 +6,9 @@ PACKAGE_VERSION = '0.3'
 
 
 def version():
-    if os.getenv('TRAVIS'):
-        return os.getenv('TRAVIS_BUILD_NUMBER')
-    else:
-        import odintools
-
-        return odintools.version(PACKAGE_VERSION, os.environ.get('BUILD_NUMBER'))
+    import odintools
+    b = os.getenv('TRAVIS_BUILD_NUMBER') if os.getenv('TRAVIS') else os.environ.get('BUILD_NUMBER')
+    return odintools.version(PACKAGE_VERSION, b)
 
 
 setup(
