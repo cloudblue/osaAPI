@@ -1,6 +1,7 @@
 import base64
 import random
 import string
+import time
 import sys
 
 if sys.version_info[0] < 3:
@@ -1493,3 +1494,43 @@ class OSA(object):
         # user_id = member_info['user_id']
 
         return member
+
+
+class Transaction:
+    def __init__(self, api, wait=True, timeout=2400):
+        self.api = api
+        self._wait = wait
+        self.timeout = timeout
+
+    def __enter__(self):
+        self.request_id, self.txn_id = self.api.TXN.Begin()
+        self.api.txn_id = self.txn_id
+        return self.api
+
+    def __exit__(self, type, value, tb):
+        self.api.TXN.Commit(txn_id=self.txn_id)
+
+        if self._wait:
+            self.wait(self.request_id)
+
+    def wait(self, task_id):
+        # sleep 1 second to let API-getters to finish
+        time.sleep(1)
+        r = self.api.getRequestStatus(request_id=task_id)
+        if r['status'] == -1:
+            raise Exception(r['error_message'])
+        status = r['result']
+        wait_time = 0
+        i = 1
+        while status['request_status'] == 1:
+            time.sleep(5 * i)
+            wait_time += 5 * i
+            status = self.api.getRequestStatus(request_id=task_id)['result']
+            if wait_time >= self.timeout:
+                raise Exception("Operation timeout=%s is reached." % self.timeout)
+            if status['request_status'] == 0:
+                return True
+            elif status['request_status'] == 2:
+                raise Exception("Operation failed. %s" % status['status_messages'])
+            if i < 6:
+                i += 1
