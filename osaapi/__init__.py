@@ -1496,7 +1496,7 @@ class OSA(object):
         return member
 
 
-class Transaction():
+class Transaction:
     def __init__(self, api, wait=True, timeout=2400):
         self.api = api
         self._wait = wait
@@ -1527,10 +1527,10 @@ class Transaction():
             wait_time += 5 * i
             status = self.api.getRequestStatus(request_id=task_id)['result']
             if wait_time >= self.timeout:
-                raise Exception('Operation timeout=%s is reached.' % self.timeout)
+                raise Exception("Operation timeout=%s is reached." % self.timeout)
             if status['request_status'] == 0:
                 return True
             elif status['request_status'] == 2:
-                raise Exception('Operation failed. %s' % status['status_messages'])
+                raise Exception("Operation failed. %s" % status['status_messages'])
             if i < 6:
                 i += 1
