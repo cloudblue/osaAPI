@@ -1,8 +1,8 @@
 import base64
 import random
 import string
-import time
 import sys
+import time
 
 if sys.version_info[0] < 3:
     import xmlrpclib as client
@@ -1312,7 +1312,7 @@ class OSA(object):
             return self.__server__.pem.APS.unprovideApplicationInstance(kwargs)
 
         def upgradeApplicationInstance(self, **kwargs):
-            return self.__server__.pem.APS.unprovideApplicationInstance(kwargs)
+            return self.__server__.pem.APS.upgradeApplicationInstance(kwargs)
 
         def getApplicationLicenseInfo(self, **kwargs):
             return self.__server__.pem.APS.getApplicationLicenseInfo(kwargs)
