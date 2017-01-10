@@ -3,6 +3,7 @@ import random
 import string
 import sys
 import time
+import uuid
 
 if sys.version_info[0] < 3:
     import xmlrpclib as client
@@ -1503,8 +1504,14 @@ class Transaction:
         self.timeout = timeout
 
     def __enter__(self):
-        self.request_id, self.txn_id = self.api.TXN.Begin()
+        self.request_id = str(uuid.uuid4())
+
+        ret = self.api.TXN.Begin(request_id=self.request_id)
+
+        self.txn_id = ret['result']['txn_id']
         self.api.txn_id = self.txn_id
+        self.api.request_id = self.request_id
+
         return self.api
 
     def __exit__(self, type, value, tb):
