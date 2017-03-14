@@ -1,6 +1,6 @@
 osaAPI
 =====
-[![Build Status](https://travis-ci.org/odin-public/osaAPI.png?branch=master)](https://travis-ci.org/odin-public/osaAPI)
+[![Build Status](https://travis-ci.org/ingrammicro/osaAPI.png?branch=master)](https://travis-ci.org/ingrammicro/osaAPI)
 
 A python client for the Odin Service Automation (OSA) and billing APIs.
 
