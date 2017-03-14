@@ -1273,6 +1273,9 @@ class OSA(object):
         def getApplicationByPackage(self, **kwargs):
             return self.__server__.pem.APS.getApplicationByPackage(kwargs)
 
+        def getApplicationInstanceToken(self, **kwargs):
+            return self.__server__.pem.APS.getApplicationInstanceToken(kwargs)
+
         def getApplicationToken(self, **kwargs):
             return self.__server__.pem.APS.getApplicationToken(kwargs)
 
