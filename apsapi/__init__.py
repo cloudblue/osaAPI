@@ -140,7 +140,7 @@ class API:
                 else:
                     resp = urllib2.urlopen(req)
 
-        except urllib2.HTTPError, error:
+        except urllib2.HTTPError as error:
             contents = error.read()
 
             # APS Exceptions have the following structure (example):
