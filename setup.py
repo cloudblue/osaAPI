@@ -22,7 +22,7 @@ setup(
     version=version(),
     author='apsliteteam, oznu',
     author_email='aps@odin.com',
-    packages=['osaapi'],
+    packages=['osaapi', 'apsapi'],
     url='https://aps.odin.com',
     license='Apache License',
     description='A python client for the Odin Service Automation (OSA) and billing APIs.',
