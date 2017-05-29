@@ -37,7 +37,7 @@ class JsonNode:
         return self.__dict__ != val
 
     def __contains__(self, x):
-        return self.__dict__.has_key(x)
+        return x in self.__dict__
 
     def __setitem__(self, key, value):
         self.__dict__[key] = value
@@ -90,7 +90,7 @@ class HTTPSClientAuthHandler(urllib2.HTTPSHandler):
         return self.do_open(self.getConnection, req)
 
     def getConnection(self, host, context=None, timeout=300):
-        if context != None:
+        if context is not None:
             return httplib.HTTPSConnection(host, key_file=self.key, cert_file=self.cert, context=context)
         return httplib.HTTPSConnection(host, key_file=self.key, cert_file=self.cert)
 
