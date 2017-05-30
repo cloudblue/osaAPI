@@ -1,12 +1,10 @@
 #!/usr/bin/python
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
+import json
 import urllib2
 import httplib
 import ssl
+from urlparse import urljoin
 
 # compatibility with python 2.7.9+
 # see https://www.python.org/dev/peps/pep-0476/
@@ -15,63 +13,8 @@ if '_create_unverified_context' in dir(ssl):
     _PYTHON_2_7_9_COMPAT = True
 
 
-class JsonNode:
-
-    def __init__(self, **kw):
-        if kw is not None:
-            self.__dict__ = kw
-
-    def __iter__(self):
-        return self.__dict__.__iter__()
-
-    def iteritems(self):
-        return self.__dict__.iteritems()
-
-    def __repr__(self):
-        return json.dumps(self._dump_(), sort_keys=True, indent=8)
-
-    def __eq__(self, val):
-        return self.__dict__ == val
-
-    def __ne__(self, val):
-        return self.__dict__ != val
-
-    def __contains__(self, x):
-        return x in self.__dict__
-
-    def __setitem__(self, key, value):
-        self.__dict__[key] = value
-
-    def __getitem__(self, key):
-        return self.__dict__[key]
-
-    def __delitem__(self, key):
-        del self.__dict__[key]
-
-    def _dump_(self):
-        d = {}
-
-        for (k, v) in self.__dict__.items():
-            if isinstance(v, list):
-                l = []
-                for e in v:
-                    if isinstance(e, JsonNode):
-                        l.append(e._dump_())
-                    else:
-                        l.append(e)
-                d[k] = l
-            elif isinstance(v, JsonNode):
-                d[k] = v._dump_()
-            else:
-                d[k] = v
-
-        return d
-
-
 class HTTPSClientAuthHandler(urllib2.HTTPSHandler):
-
     def __init__(self, key, cert):
-
         if _PYTHON_2_7_9_COMPAT:
             context = ssl._create_unverified_context()
             urllib2.HTTPSHandler.__init__(self, context=context)
@@ -86,21 +29,18 @@ class HTTPSClientAuthHandler(urllib2.HTTPSHandler):
         # a reference to a function which, for all intents and purposes,
         # will behave as a constructor
         if _PYTHON_2_7_9_COMPAT:
-            return self.do_open(self.getConnection, req, context=self._context)
-        return self.do_open(self.getConnection, req)
+            return self.do_open(self.get_connection, req, context=self._context)
+        return self.do_open(self.get_connection, req)
 
-    def getConnection(self, host, context=None, timeout=300):
+    def get_connection(self, host, context=None, timeout=300):
         if context is not None:
             return httplib.HTTPSConnection(host, key_file=self.key, cert_file=self.cert, context=context)
         return httplib.HTTPSConnection(host, key_file=self.key, cert_file=self.cert)
 
 
-class API:
-
-    verbose = False
+class API(object):
 
     class APSExcStruct:
-
         def __init__(self):
             self.code = 0
             self.type = ''
@@ -114,15 +54,11 @@ class API:
         self.url = url
 
     def call(self, verb, path, headers=None, data=None, cert=None, rheaders=None):
+        data = json.dumps(data)
 
-        if isinstance(data, JsonNode):
-            data = repr(data)
-        elif (isinstance(data, (dict, list))):
-            data = json.dumps(data)
-
-        url = self.url + path
-
-        if not(headers):
+        # url = self.url + path
+        url = urljoin(self.url, path)
+        if not headers:
             headers = dict()
 
         req = urllib2.Request(url, headers=headers, data=data)
@@ -154,7 +90,7 @@ class API:
             # to JSON directly here.
             error.aps = API.APSExcStruct()
             if len(contents):
-                error.aps = json.loads(contents, object_hook=lambda x: JsonNode(**x))
+                error.aps = json.loads(contents)
             raise error
 
         if resp.headers:
@@ -164,24 +100,23 @@ class API:
                     rheaders[k] = v.strip()
 
         content = resp.read()
-        # print content
 
         # Converting JSON immediately if presented
         if len(content):
-            content = json.loads(content, object_hook=lambda x: JsonNode(**x))
+            content = json.loads(content)
 
         return content
 
-    def GET(self, path, headers=None, data=None, cert=None):
+    def get(self, path, headers=None, data=None, cert=None):
         return self.call('GET', path, headers, data, cert)
 
-    def PUT(self, path, headers=None, data=None, cert=None):
+    def put(self, path, headers=None, data=None, cert=None):
         return self.call('PUT', path, headers, data, cert)
 
-    def POST(self, path, headers=None, data=None, cert=None):
+    def post(self, path, headers=None, data=None, cert=None):
         return self.call('POST', path, headers, data, cert)
 
-    def DELETE(self, path, headers=None, data=None, cert=None):
+    def delete(self, path, headers=None, data=None, cert=None):
         return self.call('DELETE', path, headers, data, cert)
 
 #
