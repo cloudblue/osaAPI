@@ -15,11 +15,10 @@ if '_create_unverified_context' in dir(ssl):
 
 class HTTPSClientAuthHandler(urllib2.HTTPSHandler):
     def __init__(self, key, cert):
+        context = None
         if _PYTHON_2_7_9_COMPAT:
             context = ssl._create_unverified_context()
-            urllib2.HTTPSHandler.__init__(self, context=context)
-        else:
-            urllib2.HTTPSHandler.__init__(self)
+        urllib2.HTTPSHandler.__init__(self, context=context)
 
         self.key = key
         self.cert = cert
@@ -28,14 +27,10 @@ class HTTPSClientAuthHandler(urllib2.HTTPSHandler):
         # Rather than pass in a reference to a connection class, we pass in
         # a reference to a function which, for all intents and purposes,
         # will behave as a constructor
-        if _PYTHON_2_7_9_COMPAT:
-            return self.do_open(self.get_connection, req, context=self._context)
-        return self.do_open(self.get_connection, req)
+        return self.do_open(self.get_connection, req, context=self._context)
 
-    def get_connection(self, host, context=None, timeout=300):
-        if context is not None:
-            return httplib.HTTPSConnection(host, key_file=self.key, cert_file=self.cert, context=context)
-        return httplib.HTTPSConnection(host, key_file=self.key, cert_file=self.cert)
+    def get_connection(self, host, context=None):
+        return httplib.HTTPSConnection(host, key_file=self.key, cert_file=self.cert, context=context)
 
 
 class API(object):
