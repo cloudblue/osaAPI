@@ -1,8 +1,9 @@
 osaAPI
 =====
-[![Build Status](https://travis-ci.org/ingrammicro/osaAPI.png?branch=master)](https://travis-ci.org/ingrammicro/osaAPI)
+![pyversions](https://img.shields.io/pypi/pyversions/osaapi.svg) [![Build Status](https://img.shields.io/travis/ingrammicro/osaAPI/master.svg)](https://travis-ci.org/ingrammicro/osaAPI) [![PyPi Status](https://img.shields.io/pypi/v/osaapi.svg)](https://pypi.python.org/pypi/osaapi)
 
-A python client for the Odin Service Automation (OSA) and billing APIs.
+
+A python binding for the Odin Service Automation (OSA) and billing APIs.
 
 Installation
 ------------
@@ -69,12 +70,12 @@ done in the examples in this Readme.
 
 The full OSA Public API Reference can be found here:
 
-<http://download.pa.parallels.com/poa/5.5/doc/index.htm?fileName=56781.htm>
+<http://download.automation.odin.com/oa/7.1/oapremium/portal/en/operations_api_reference/index.htm?fileName=about.htm>
 
 ### Basic API Call
 
 This example will show the
-[pem.getAccountInfo](http://download.pa.parallels.com/poa/5.5/doc/7915.htm)
+[pem.getAccountInfo](http://download.automation.odin.com/oa/7.1/oapremium/portal/en/operations_api_reference/7915.htm)
 method being called.
 
 ``` {.sourceCode .python}
@@ -98,7 +99,7 @@ of struct'. This example shows how to send these values using the osaapi
 client.
 
 This example is based on the
-[pem.activateSubscription](http://download.pa.parallels.com/poa/5.5/doc/39160.htm)
+[pem.activateSubscription](http://download.automation.odin.com/oa/7.1/oapremium/portal/en/operations_api_reference/39160.htm)
 method with resources types called 'DiskSpace' and 'Bandwidth' and a
 domain name.
 
@@ -139,6 +140,8 @@ result = pem.activateSubscription(**d)
 
 ### Transactions
 
+<http://download.automation.odin.com/oa/7.1/oapremium/portal/en/operations_api_reference/43326.htm>
+
 There are three OSA API calls that do not start with pem in the official
 documentation. When using osaapi you can use these API calls as
 documented but you will still need to prefix them with your OSA
@@ -162,8 +165,9 @@ pem.txn.Rollback()
 
 ### Error Handling
 
-The OSA API has quite good responces when an error occurs during an API
-call. The below example shows the responce format for OSA API errors:
+
+The OSA API has quite good responses when an error occurs during an API
+call. The below example shows the response format for OSA API errors:
 
 ``` {.sourceCode .python}
 {
@@ -191,7 +195,7 @@ list in a specific order to know what each value represents.
 
 The full billing Public API Reference can be found here:
 
-<http://download.pa.parallels.com/pba/5.5/doc/pdf/SDK_API/pba_5.5_public_api_reference.pdf>
+<http://download.automation.odin.com/oa/7.1/oapremium/portal/en/billing_api_reference/74975.htm>
 
 ### Basic API Call
 
