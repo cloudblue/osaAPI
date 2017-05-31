@@ -87,4 +87,3 @@ class API(object):
 
     def delete(self, path, headers=None, data=None, cert=None):
         return self.call('DELETE', path, headers, data, cert)
-
