@@ -242,7 +242,7 @@ This is an example of what is returned in the case of an error:
 }
 ```
 
-APS API
+APS API Usage Example
 ---------------------------------------
 ```{.sourceCode .python}
     import apsapi
