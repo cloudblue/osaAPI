@@ -1,6 +1,7 @@
 osaAPI
 =====
-[![Build Status](https://travis-ci.org/ingrammicro/osaAPI.png?branch=master)](https://travis-ci.org/ingrammicro/osaAPI)
+![pyversions](https://img.shields.io/pypi/pyversions/osaapi.svg) [![Build Status](https://img.shields.io/travis/ingrammicro/osaAPI/master.svg)](https://travis-ci.org/ingrammicro/osaAPI) [![PyPi Status](https://img.shields.io/pypi/v/osaapi.svg)](https://pypi.python.org/pypi/osaapi)
+
 
 A python binding for the Odin Service Automation (OSA) and billing APIs.
 
