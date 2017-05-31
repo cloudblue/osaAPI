@@ -31,11 +31,14 @@ class API(object):
         self.use_unverified_context = use_unverified_context
 
     def call(self, verb, path, headers=None, data=None, cert=None):
-        data = json.dumps(data)
+        if not data:
+            data = {}
+        else:
+            data = json.dumps(data)
 
         url = urljoin(self.url, path)
         if not headers:
-            headers = dict()
+            headers = {}
 
         req = urllib2.Request(url, headers=headers, data=data)
         req.get_method = lambda: verb
