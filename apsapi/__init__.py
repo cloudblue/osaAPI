@@ -1,25 +1,13 @@
-#!/usr/bin/python
-
-import json
-import urllib2
 import httplib
+import json
 import ssl
+import urllib2
 from urlparse import urljoin
 
-# compatibility with python 2.7.9+
-# see https://www.python.org/dev/peps/pep-0476/
-_PYTHON_2_7_9_COMPAT = False
-if '_create_unverified_context' in dir(ssl):
-    _PYTHON_2_7_9_COMPAT = True
 
-
-class HTTPSClientAuthHandler(urllib2.HTTPSHandler):
-    def __init__(self, key, cert):
-        context = None
-        if _PYTHON_2_7_9_COMPAT:
-            context = ssl._create_unverified_context()
-        urllib2.HTTPSHandler.__init__(self, context=context)
-
+class HTTPSClientAuthHandler(urllib2.HTTPSHandler, object):
+    def __init__(self, key, cert, context=None):
+        super(HTTPSClientAuthHandler, self).__init__(context=context)
         self.key = key
         self.cert = cert
 
@@ -27,31 +15,24 @@ class HTTPSClientAuthHandler(urllib2.HTTPSHandler):
         # Rather than pass in a reference to a connection class, we pass in
         # a reference to a function which, for all intents and purposes,
         # will behave as a constructor
-        return self.do_open(self.get_connection, req, context=self._context)
+        return self.do_open(self.get_connection, req)
 
-    def get_connection(self, host, context=None):
-        return httplib.HTTPSConnection(host, key_file=self.key, cert_file=self.cert, context=context)
+    def get_connection(self, host, timeout=300):
+        return httplib.HTTPSConnection(host, key_file=self.key, cert_file=self.cert, context=self._context)
 
 
 class API(object):
-
-    class APSExcStruct:
-        def __init__(self):
-            self.code = 0
-            self.type = ''
-            self.message = ''
-
-    def __init__(self, url):
+    def __init__(self, url, use_unverified_context):
         """
         Takes something like the following argument as input:
         url = 'https://a.bvt.aps.sw.ru:6308'
         """
         self.url = url
+        self.use_unverified_context = use_unverified_context
 
-    def call(self, verb, path, headers=None, data=None, cert=None, rheaders=None):
+    def call(self, verb, path, headers=None, data=None, cert=None):
         data = json.dumps(data)
 
-        # url = self.url + path
         url = urljoin(self.url, path)
         if not headers:
             headers = dict()
@@ -59,20 +40,18 @@ class API(object):
         req = urllib2.Request(url, headers=headers, data=data)
         req.get_method = lambda: verb
 
-        resp = None
+        context = None
+        if self.use_unverified_context:
+            context = ssl._create_unverified_context()
+
         try:
             if cert:
-                opener = urllib2.build_opener(HTTPSClientAuthHandler(cert, cert))
+                opener = urllib2.build_opener(HTTPSClientAuthHandler(cert, cert, context=context))
                 resp = opener.open(req)
             else:
-                if _PYTHON_2_7_9_COMPAT:
-                    context = ssl._create_unverified_context()
-                    resp = urllib2.urlopen(req, context=context)
-                else:
-                    resp = urllib2.urlopen(req)
-
+                resp = urllib2.urlopen(req, context=context)
         except urllib2.HTTPError as error:
-            contents = error.read()
+            content = error.read()
 
             # APS Exceptions have the following structure (example):
             # {
@@ -83,21 +62,16 @@ class API(object):
             # In order to allow simple processing of this exception like
             # ('something' in error.aps.message) we convert this exception
             # to JSON directly here.
-            error.aps = API.APSExcStruct()
-            if len(contents):
-                error.aps = json.loads(contents)
+            if content:
+                error.aps = json.loads(content)
+            else:
+                error.aps = {'code': 0, 'type': '', 'message': ''}
             raise error
-
-        if resp.headers:
-            if rheaders is not None:
-                for h in resp.headers.headers:
-                    (k, v) = h.split(':', 1)
-                    rheaders[k] = v.strip()
 
         content = resp.read()
 
         # Converting JSON immediately if presented
-        if len(content):
+        if content:
             content = json.loads(content)
 
         return content
@@ -114,9 +88,3 @@ class API(object):
     def delete(self, path, headers=None, data=None, cert=None):
         return self.call('DELETE', path, headers, data, cert)
 
-#
-# Usage Example:
-#   import apsapi
-#   aapi = apsapi.API(url = 'https://a.bvt.aps.sw.ru:6308')
-#   resp = aapi.GET( '/aps/2/resources/' + safilter, self.getProviderToken() )
-#
