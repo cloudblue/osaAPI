@@ -22,7 +22,7 @@ class HTTPSClientAuthHandler(urllib2.HTTPSHandler, object):
 
 
 class API(object):
-    def __init__(self, url, use_unverified_context):
+    def __init__(self, url, use_unverified_context=False):
         """
         Takes something like the following argument as input:
         url = 'https://a.bvt.aps.sw.ru:6308'
@@ -53,15 +53,6 @@ class API(object):
         except urllib2.HTTPError as error:
             content = error.read()
 
-            # APS Exceptions have the following structure (example):
-            # {
-            #    "code": 500,
-            #    "type": "APS::Hosting::Exception",
-            #    "message": "Limit for resource ..."
-            # }
-            # In order to allow simple processing of this exception like
-            # ('something' in error.aps.message) we convert this exception
-            # to JSON directly here.
             if content:
                 error.aps = json.loads(content)
             else:
