@@ -1521,7 +1521,10 @@ class Transaction:
         return self.api
 
     def __exit__(self, type, value, tb):
-        self.api.TXN.Commit(txn_id=self.txn_id)
+        ret = self.api.TXN.Commit(txn_id=self.txn_id)
+
+        if ret['status'] == -1:
+            raise Exception(ret['error_message'])
 
         if self._wait:
             self.wait(self.request_id)
