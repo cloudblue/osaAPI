@@ -1511,6 +1511,9 @@ class Transaction:
 
         ret = self.api.TXN.Begin(request_id=self.request_id)
 
+        if ret['status'] == -1:
+            raise Exception(ret['error_message'])
+
         self.txn_id = ret['result']['txn_id']
         self.api.txn_id = self.txn_id
         self.api.request_id = self.request_id
