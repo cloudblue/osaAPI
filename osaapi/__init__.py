@@ -16,6 +16,10 @@ def rand_id(max_size=10, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))
 
 
+class OpenApiError(Exception):
+    pass
+
+
 class PBA(object):
     def __init__(self, host, user=None, password=None, ssl=False, verbose=False, port=5224):
         protocol = 'https' if ssl else 'http'
@@ -1512,7 +1516,7 @@ class Transaction:
         ret = self.api.TXN.Begin(request_id=self.request_id)
 
         if ret['status'] == -1:
-            raise Exception(ret['error_message'])
+            raise OpenApiError(ret['error_message'])
 
         self.txn_id = ret['result']['txn_id']
         self.api.txn_id = self.txn_id
@@ -1524,7 +1528,7 @@ class Transaction:
         ret = self.api.TXN.Commit(txn_id=self.txn_id)
 
         if ret['status'] == -1:
-            raise Exception(ret['error_message'])
+            raise OpenApiError(ret['error_message'])
 
         if self._wait:
             self.wait(self.request_id)
@@ -1534,7 +1538,7 @@ class Transaction:
         time.sleep(1)
         r = self.api.getRequestStatus(request_id=task_id)
         if r['status'] == -1:
-            raise Exception(r['error_message'])
+            raise OpenApiError(r['error_message'])
         status = r['result']
         wait_time = 0
         i = 1
@@ -1543,10 +1547,10 @@ class Transaction:
             wait_time += 5 * i
             status = self.api.getRequestStatus(request_id=task_id)['result']
             if wait_time >= self.timeout:
-                raise Exception("Operation timeout=%s is reached." % self.timeout)
+                raise OpenApiError("Operation timeout=%s is reached." % self.timeout)
             if status['request_status'] == 0:
                 return True
             elif status['request_status'] == 2:
-                raise Exception("Operation failed. %s" % status['status_messages'])
+                raise OpenApiError("Operation failed. %s" % status['status_messages'])
             if i < 6:
                 i += 1
