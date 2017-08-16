@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='osaapi',
-    version='0.4.3',
+    version='0.4.4',
     author='apsconnect team, original by oznu',
     author_email='aps@odin.com',
     packages=['osaapi'],
