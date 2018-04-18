@@ -21,13 +21,13 @@ class OpenApiError(Exception):
 
 
 class PBA(object):
-    def __init__(self, host, user=None, password=None, ssl=False, verbose=False, port=5224):
+    def __init__(self, host, user=None, password=None, ssl=False, verbose=False, port=5224, endpoint="RPC2"):
         protocol = 'https' if ssl else 'http'
         if user:
             self.__server__ = client.ServerProxy(
-                "%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
+                "%s://%s:%s@%s:%s/%s" % (protocol, user, password, host, str(port), endpoint))
         else:
-            self.__server__ = client.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
+            self.__server__ = client.ServerProxy("%s://%s:%s/%s" % (protocol, host, str(port), endpoint))
         self.__server__._ServerProxy__verbose = verbose
         self.host = host
 
@@ -59,13 +59,13 @@ class PBA(object):
 
 
 class OSA(object):
-    def __init__(self, host, user=None, password=None, ssl=False, verbose=False, port=8440):
+    def __init__(self, host, user=None, password=None, ssl=False, verbose=False, port=8440, endpoint="RPC2"):
         protocol = 'https' if ssl else 'http'
         if user:
             self.__server__ = client.ServerProxy(
-                "%s://%s:%s@%s:%s/RPC2" % (protocol, user, password, host, str(port)))
+                "%s://%s:%s@%s:%s/%s" % (protocol, user, password, host, str(port), str(endpoint)))
         else:
-            self.__server__ = client.ServerProxy("%s://%s:%s/RPC2" % (protocol, host, str(port)))
+            self.__server__ = client.ServerProxy("%s://%s:%s/%s" % (protocol, host, str(port), str(endpoint)))
         self.__server__._ServerProxy__verbose = verbose
 
     # PPA only

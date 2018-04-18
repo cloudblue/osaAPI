@@ -60,6 +60,16 @@ from osaapi import OSA, PBA
 pem = OSA('mn.hostname.com', port=8888)
 ```
 
+### Custom endpoint
+
+``` {.sourceCode .python}
+from osaapi import OSA, PBA
+
+# connect to OSA
+
+pem = OSA('mn.hostname.com', endpoint=my/custom/endpoint)
+```
+
 Odin Service Automation (OSA) API
 -----------------------------------------
 
