@@ -3,7 +3,7 @@ osaAPI
 ![pyversions](https://img.shields.io/pypi/pyversions/osaapi.svg) [![Build Status](https://img.shields.io/travis/ingrammicro/osaAPI/master.svg)](https://travis-ci.org/ingrammicro/osaAPI) [![PyPi Status](https://img.shields.io/pypi/v/osaapi.svg)](https://pypi.python.org/pypi/osaapi)
 
 
-A python binding for the Odin Service Automation (OSA) and billing APIs.
+A python binding for the CloudBlue Commerce APIs a.k.a. Odin Service Automation or OSA.
 
 Installation
 ------------
@@ -60,7 +60,7 @@ from osaapi import OSA, PBA
 pem = OSA('mn.hostname.com', port=8888)
 ```
 
-Odin Service Automation (OSA) API
+CloudBlue Commerce API
 -----------------------------------------
 
 All but three of the OSA API calls start with 'pem', for this reason it
