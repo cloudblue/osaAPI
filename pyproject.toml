@@ -7,8 +7,52 @@ readme = "README.md"
 packages = [{include = "osaapi"}]
 
 [tool.poetry.dependencies]
-python = ">=2,<3.7"
+python = ">=3.7,<3.9"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.test.dependencies]
+flake8 = "^5.0"
+flake8-bugbear = "^22"
+flake8-cognitive-complexity = "^0.1"
+flake8-commas = "^2.1"
+flake8-isort = "5.*"
+flake8-broken-line = "~0.5"
+flake8-comprehensions = "^3.10"
+flake8-debugger = "^4.0.0"
+flake8-eradicate = "^1.3.0"
+flake8-string-format = "^0.3.0"
+flake8-pyproject = "^1.2.2"
+isort = "5.*"
+
+[tool.flake8]
+exclude = [
+    ".idea",
+    ".vscode",
+    ".git",
+    "resources",
+    "*.eggs",
+    "tests/fixtures",
+    "connect/.data",
+    "venv"
+]
+
+show_source = true
+max_line_length = 100
+max_cognitive_complexity = 15
+ignore = ["FI1", "W503", "B008", "E800", "F841"]
+
+
+[tool.isort]
+src_paths = "*"
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+group_by_package = true
+multi_line_output = 3
+force_grid_wrap = 4
+combine_as_imports = true
+use_parentheses = true
+include_trailing_comma = true
+line_length = 100
+lines_after_imports = 2
