@@ -1415,7 +1415,7 @@ class OSA(object):
             return self.__server__.pem.tasks.getTaskLog(kwargs)
 
         def cancelJob(self, **kwargs):
-            return self.__server__.pem.tasks.getTaskLog(kwargs)
+            return self.__server__.pem.tasks.cancelJob(kwargs)
 
     def create_account(self, first_name=None, last_name=None, account_type='C',
                        branded_domain=None, parent_account_id=None, **kwargs):
