@@ -5,6 +5,7 @@ import sys
 import time
 import uuid
 
+
 if sys.version_info[0] < 3:
     import xmlrpclib as client
 else:
@@ -1454,7 +1455,7 @@ class OSA(object):
             'person': person,
             'address': kwargs.get('address', address),
             'phone': kwargs.get('phone', phone),
-            'email': kwargs.get('email', '%s@%s.com' % (rand_id(10), rand_id(8)))
+            'email': kwargs.get('email', '%s@%s.com' % (rand_id(10), rand_id(8))),
         }
 
         if branded_domain:
@@ -1479,13 +1480,13 @@ class OSA(object):
             'zipcode': rand_id(10, string.digits),
             'city': rand_id(10),
             'country': 'ru',
-            'state': rand_id(10)
+            'state': rand_id(10),
         }
         phone = {
             'country_code': rand_id(3, string.digits),
             'area_code': rand_id(4, string.digits),
             'phone_num': rand_id(10, string.digits),
-            'ext_num': ''
+            'ext_num': '',
         }
 
         member = self.addAccountMember(
@@ -1495,7 +1496,7 @@ class OSA(object):
             person={'first_name': first_name, 'last_name': last_name},
             address=kwargs.get('address', address),
             phone=kwargs.get('phone', phone),
-            email=email
+            email=email,
         )
 
         # !ATTENTION!

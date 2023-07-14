@@ -2,6 +2,7 @@
 
 from setuptools import setup
 
+
 setup(
     name='osaapi',
     version='1.0.0',
@@ -19,12 +20,8 @@ setup(
         'License :: OSI Approved :: Apache Software License',
 
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
 
         'Operating System :: OS Independent',
         'Operating System :: POSIX',
