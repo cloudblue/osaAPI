@@ -245,3 +245,11 @@ This is an example of what is returned in the case of an error:
     'method'        : 'AccountDetailsGet_API'
 }
 ```
+
+APS API Usage Example
+---------------------------------------
+```{.sourceCode .python}
+    import apsapi
+    aapi = apsapi.API(url = 'https://hostname:6308')
+    resp = aapi.GET( '/aps/2/resources/' + safilter, {'APS-Token': token} )
+```

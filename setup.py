@@ -8,7 +8,7 @@ setup(
     version='1.0.0',
     author='apsconnect team, original by oznu',
     author_email='aps@odin.com',
-    packages=['osaapi'],
+    packages=['osaapi', 'apsapi'],
     url='https://aps.odin.com',
     license='Apache License',
     description='A python binding for the Odin Service Automation (OSA) and billing APIs.',
